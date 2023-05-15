@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/13 11:53:37 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:25:12 by margueriteb      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,29 +31,25 @@ void	get_bits(int signum ,char *c)
 
 void sig_handler(int signum, siginfo_t *info, void *context)
 {
-	static	int pid = 0;
-	static	int i = 0;
-	static	char c = 0;
-	
-	(void) context;
-	if (pid == 0)
-		pid = info->si_pid; /* sending process */
-	get_bits(signum, &c);
-	i++;
-	if (i == 8)
-	{
-		i = 0;
-		if (!c)
-		{
-			//kill(pid, SIGUSR1);
-			pid = 0;
-			return ;
-		}
-		//print_byte(c);
-		write(1, &c, 1);
-		c = 0;
-	}
-	//kill(pid, SIGUSR2);
+    static int pid = 0;
+    static int i = 0;
+    static char buffer[BUFFER_SIZE];
+    
+    (void) context;
+    if (pid == 0)
+        pid = info->si_pid; /* sending process */
+    get_bits(signum, &buffer[i / 8]);
+    i++;
+    if (i % 8 == 0)
+    {
+        if (buffer[(i / 8) - 1] == '\0')
+        {
+            pid = 0;
+            write(1, buffer, ft_strlen(buffer));
+            ft_memset(buffer, 0, BUFFER_SIZE);
+            i = 0;
+        }
+    }
 }
 
 int main(void)
