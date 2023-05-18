@@ -75,5 +75,6 @@ int main(int argc, char *argv[])
 		ft_printf("%s" "error_2");
 	while (argv[2][byte_idx])
 		send_bits(argv[2][byte_idx++], s_pid);
+    send_bits('\0', s_pid);
     return (0);
 }
