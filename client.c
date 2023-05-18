@@ -6,25 +6,26 @@
 /*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:34 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/15 18:25:03 by margueriteb      ###   ########.fr       */
+/*   Updated: 2023/05/18 16:54:20 by margueriteb      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <signal.h>
 #include "minitalk.h"
+#include <stdlib.h>
 
 //static int	g_var; /* to know when we stop receiving signal */
 
 
 
-/*void print_byte(char c) {
+void print_byte(char c) {
     for (int i = 7; i >= 0; i--) {
         printf("%d", (c >> i) & 1);
     }
     printf("\n");
 }
-*/
+
 
 void	sig_handler(int signum, siginfo_t *info, void *context)
 {
@@ -34,7 +35,6 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	(void) context;
 	if (signum == SIGUSR2)
 		i++;
-	
 }
 
 void	send_bits(char byte, int pid)

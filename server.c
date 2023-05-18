@@ -6,19 +6,19 @@
 /*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/15 18:25:12 by margueriteb      ###   ########.fr       */
+/*   Updated: 2023/05/18 17:37:39 by margueriteb      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/*void print_byte(char c) {
+void print_byte(char c) {
     for (int i = 7; i >= 0; i--) {
         printf("%d", (c >> i) & 1);
     }
     printf("\n");
 }
-*/
+
 
 void	get_bits(int signum ,char *c)
 {
@@ -28,29 +28,42 @@ void	get_bits(int signum ,char *c)
 		*c <<= 1;
 }
 
-
-void sig_handler(int signum, siginfo_t *info, void *context)
+char	*print_string(char *message)
 {
-    static int pid = 0;
-    static int i = 0;
-    static char buffer[BUFFER_SIZE];
-    
-    (void) context;
-    if (pid == 0)
-        pid = info->si_pid; /* sending process */
-    get_bits(signum, &buffer[i / 8]);
-    i++;
-    if (i % 8 == 0)
-    {
-        if (buffer[(i / 8) - 1] == '\0')
-        {
-            pid = 0;
-            write(1, buffer, ft_strlen(buffer));
-            ft_memset(buffer, 0, BUFFER_SIZE);
-            i = 0;
-        }
-    }
+	ft_printf("%s", message);
+	//ft_putchar_fd('\n', 1);
+	free(message);
+	return (NULL);
 }
+
+void	sig_handler(int signum, siginfo_t *info, void *context)
+{
+	static char	c = 0;
+	static int	i = 0;
+	static int	pid = 0;
+	static char	*message = 0;
+
+	(void)context;
+	if (pid == 0)
+		pid = info->si_pid;
+	get_bits(signum, &c);
+	i++;
+	if (i == 8)
+	{
+		i = 0;
+		if (!c)
+		{
+			message = ft_strjoin(&c, message);
+			pid = 0;
+		}
+		else if (c == '\0')
+			message = print_string(message);
+		print_byte(c);
+		i = 0;
+		c = 0;
+	}
+}
+
 
 int main(void)
 {
