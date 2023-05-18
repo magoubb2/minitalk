@@ -3,28 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:34 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/13 12:55:38 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:54:20 by margueriteb      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <signal.h>
 #include "minitalk.h"
+#include <stdlib.h>
 
 //static int	g_var; /* to know when we stop receiving signal */
 
 
 
-/*void print_byte(char c) {
+void print_byte(char c) {
     for (int i = 7; i >= 0; i--) {
         printf("%d", (c >> i) & 1);
     }
     printf("\n");
 }
-*/
+
 
 void	sig_handler(int signum, siginfo_t *info, void *context)
 {
@@ -34,22 +35,16 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	(void) context;
 	if (signum == SIGUSR2)
 		i++;
-	else if (signum == SIGUSR1)
-		ft_printf("Number of byte received%d\n:", i/8);
-	
 }
 
 void	send_bits(char byte, int pid)
 {
-    int i;
 	int bit_idx;
 
     bit_idx = 7;
     
-	//print_byte(byte);
     while(bit_idx >= 0)
     {
-		i = 0;
         if ((byte >> bit_idx) & 1)
             kill(pid, SIGUSR1);
         else
@@ -58,19 +53,6 @@ void	send_bits(char byte, int pid)
 		bit_idx--;
     }
 }
-
-/*void    send_message(char *str, int pid)
-{
-    int i;
-
-    i = 0;
-    while(str[i])
-    {
-        send_bits(str[i], pid);
-        i++;
-    }
-}
-*/
 
 int main(int argc, char *argv[])
 {

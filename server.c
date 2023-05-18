@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/13 11:53:37 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/18 17:37:39 by margueriteb      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/*void print_byte(char c) {
+void print_byte(char c) {
     for (int i = 7; i >= 0; i--) {
         printf("%d", (c >> i) & 1);
     }
     printf("\n");
 }
-*/
+
 
 void	get_bits(int signum ,char *c)
 {
@@ -28,16 +28,24 @@ void	get_bits(int signum ,char *c)
 		*c <<= 1;
 }
 
-
-void sig_handler(int signum, siginfo_t *info, void *context)
+char	*print_string(char *message)
 {
-	static	int pid = 0;
-	static	int i = 0;
-	static	char c = 0;
-	
-	(void) context;
+	ft_printf("%s", message);
+	//ft_putchar_fd('\n', 1);
+	free(message);
+	return (NULL);
+}
+
+void	sig_handler(int signum, siginfo_t *info, void *context)
+{
+	static char	c = 0;
+	static int	i = 0;
+	static int	pid = 0;
+	static char	*message = 0;
+
+	(void)context;
 	if (pid == 0)
-		pid = info->si_pid; /* sending process */
+		pid = info->si_pid;
 	get_bits(signum, &c);
 	i++;
 	if (i == 8)
@@ -45,16 +53,17 @@ void sig_handler(int signum, siginfo_t *info, void *context)
 		i = 0;
 		if (!c)
 		{
-			//kill(pid, SIGUSR1);
+			message = ft_strjoin(&c, message);
 			pid = 0;
-			return ;
 		}
-		//print_byte(c);
-		write(1, &c, 1);
+		else if (c == '\0')
+			message = print_string(message);
+		print_byte(c);
+		i = 0;
 		c = 0;
 	}
-	//kill(pid, SIGUSR2);
 }
+
 
 int main(void)
 {
