@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
+/*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/18 17:37:39 by margueriteb      ###   ########.fr       */
+/*   Updated: 2023/05/19 11:10:01 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,34 @@ char	*print_string(char *message)
 	return (NULL);
 }
 
+char	*ft_char(char *str, char c)
+{
+	char	*new;
+	int		i;
+	int		k;
+	
+	if (!str)
+		i = 0;
+	else
+		i = ft_strlen(str);
+	new = ft_calloc(i + 2, sizeof(char));
+	if (!new)
+		exit(1);
+	k = -1;
+	while (++k < i)
+		new[k] = str[k];
+	new[i] = c;
+	if (str)
+		free(str);
+	return (new);
+}
+
 void	sig_handler(int signum, siginfo_t *info, void *context)
 {
 	static char	c = 0;
 	static int	i = 0;
 	static int	pid = 0;
-	static char	*message = 0;
+	static char	*message = NULL;
 
 	(void)context;
 	if (pid == 0)
@@ -51,14 +73,9 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	if (i == 8)
 	{
 		i = 0;
-		if (!c)
-		{
-			message = ft_strjoin(&c, message);
-			pid = 0;
-		}
-		else if (c == '\0')
+		message = ft_char(message, c);
+		if (c == 0)
 			message = print_string(message);
-		print_byte(c);
 		i = 0;
 		c = 0;
 	}
