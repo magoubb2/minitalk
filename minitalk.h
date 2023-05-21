@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minitalk.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: margueritebaronbeliveau <margueritebaro    +#+  +:+       +#+        */
+/*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:36:11 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/18 16:43:51 by margueriteb      ###   ########.fr       */
+/*   Updated: 2023/05/20 18:47:05 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@
 
 typedef struct s_data
 {
-    char *c;
-    char *str;
-}			t_data;
+	char	*str;
+	pid_t	pid;
+}	t_data;
 
-int ft_atoi(const char *str);
+int		ft_atoi(const char *str);
+char	*straddc(char *str, char c);
 
 #endif
