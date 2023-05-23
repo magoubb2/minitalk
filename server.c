@@ -31,6 +31,7 @@ t_data	g_data;
 // 		*c <<= 1;
 // }
 
+
 /*int clear(unsigned long* l, int* p, char* c, int t_pid)
 {
 	c = 0;
