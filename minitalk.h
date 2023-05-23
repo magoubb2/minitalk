@@ -6,7 +6,7 @@
 /*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:36:11 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/20 18:47:05 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/23 17:24:51 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,13 @@ typedef struct s_data
 
 int		ft_atoi(const char *str);
 char	*straddc(char *str, char c);
+
+typedef struct s_clear
+{
+	size_t	len;
+	int		i;
+	char	c;
+}	t_clear;
+
 
 #endif
