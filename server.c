@@ -6,7 +6,7 @@
 /*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/20 20:05:28 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:00:43 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,42 @@ t_data	g_data;
 // 		*c <<= 1;
 // }
 
-char	*print_string(char *message, bool print)
+/*int clear(unsigned long* l, int* p, char* c, int t_pid)
 {
+	c = 0;
+	l = 0;
+	p = 0;
+	if (g_data.str)
+		free(g_data.str);
+	g_data.str = NULL;
+	return (0);
+}
+*/
+
+int clear(t_clear *data)
+{
+	data->len = 0;
+	data->i = 0;
+	data->c = 0;
+	return(0);
+	if (g_data.str)
+		free(g_data.str);
+	g_data.str = NULL;
+	return (0);
+}
+
+
+//char	*print_string(char *message, bool print, int clear)
+char	*print_string(char *message, bool print, t_clear *data)
+{
+	//(void)clear;
 	if (print)
 		ft_printf("%s", message);
 	//ft_putchar_fd('\n', 1);
+	//if (g_data.str)
+	clear(data);
 	free(message);
+	//g_data.str = NULL;
 	return (NULL);
 }
 
@@ -63,28 +93,39 @@ char	*ft_char(char *str, char c, size_t len)
 
 void	sig_handler(int signum, siginfo_t *info)
 {
-	static size_t	len = 0;
-	static int		i = 0;
-	static char		c = 0;
+	static t_clear data = {0, 0, 0};
+	//static size_t	len = 0;
+	//static int		i = 0;
+	//static char		c = 0;
 
-	if (info->si_pid)
+	if (!g_data.pid)
 		g_data.pid = info->si_pid;
-	if (signum == SIGUSR1)
-		c = c | (1 << i);
-	++i;
-	if (i == 8)
+	if (info->si_pid != g_data.pid && info->si_pid)
 	{
-		g_data.str = ft_char(g_data.str, c, len++);
-		i = 0;
-		if (c == '\0')
+		//g_data.str = print_string(g_data.str, 0, clear(&len, &i, &c, info->si_pid));
+		g_data.str = print_string(g_data.str, 0, &data);
+		//clear(&data);
+		g_data.pid = info->si_pid;
+		//i = 0;
+		//c = 0;
+		//len = 0;
+	}
+	if (signum == SIGUSR1)
+		data.c = data.c | (1 << data.i);
+	++data.i;
+	if (data.i == 8)
+	{
+		g_data.str = ft_char(g_data.str, data.c, data.len++);
+		data.i = 0;
+		if (data.c == '\0')
 		{
-			write(1, g_data.str, len);
-			len = 0;
-			c = 0;
+			write(1, g_data.str, data.len);
+			data.len = 0;
+			data.c = 0;
 			kill(g_data.pid, SIGUSR2);
 			return ;
 		}
-		c = 0;
+		data.c = 0;
 	}
 	kill(g_data.pid, SIGUSR1);
 }
