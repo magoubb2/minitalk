@@ -6,7 +6,7 @@
 /*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/20 20:05:28 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/22 21:39:56 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,18 @@ t_data	g_data;
 // 		*c <<= 1;
 // }
 
-char	*print_string(char *message, bool print)
+int clear(unsigned long* l, int* p, char* c, int t_pid)
 {
+	c = 0;
+	l = 0;
+	p = 0;
+	g_data.pid = t_pid;
+	return (0);
+}
+
+char	*print_string(char *message, bool print, int clear)
+{
+	(void)clear;
 	if (print)
 		ft_printf("%s", message);
 	//ft_putchar_fd('\n', 1);
@@ -67,8 +77,10 @@ void	sig_handler(int signum, siginfo_t *info)
 	static int		i = 0;
 	static char		c = 0;
 
-	if (info->si_pid)
+	if (!g_data.pid)
 		g_data.pid = info->si_pid;
+	if (info->si_pid != g_data.pid && info->si_pid)
+		g_data.str = print_string(g_data.str, 0, clear(&len, &i, &c, info->si_pid));
 	if (signum == SIGUSR1)
 		c = c | (1 << i);
 	++i;
