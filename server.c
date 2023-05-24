@@ -6,7 +6,7 @@
 /*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:44 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/23 19:54:05 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/23 21:45:35 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "minitalk.h"
 
 t_data	g_data;
-
 
 int	ft_clear(t_clear *data)
 {
@@ -28,8 +27,9 @@ int	ft_clear(t_clear *data)
 	return (0);
 }
 
-char	*print_string(char *message, bool print, t_clear *data)
+char	*print_string(char *message, bool print, t_clear *data, void *context)
 {
+	(void)context;
 	if (print)
 		ft_printf("%s", message);
 	ft_clear(data);
@@ -40,8 +40,8 @@ char	*print_string(char *message, bool print, t_clear *data)
 char	*ft_char(char *str, char c, size_t len)
 {
 	static size_t	size = 128;
-	char*			new;
-	
+	char			*new;
+
 	if (!str)
 		new = malloc(size);
 	else if (len >= size)
@@ -59,15 +59,15 @@ char	*ft_char(char *str, char c, size_t len)
 	return (new);
 }
 
-void	sig_handler(int signum, siginfo_t *info)
+void	sig_handler(int signum, siginfo_t *info, void *context)
 {
-	static t_clear data = {0, 0, 0};
+	static t_clear	data = {0, 0, 0};
 
 	if (!g_data.pid)
 		g_data.pid = info->si_pid;
 	if (info->si_pid != g_data.pid && info->si_pid)
 	{
-		g_data.str = print_string(g_data.str, 0, &data);
+		g_data.str = print_string(g_data.str, 0, &data, context);
 		g_data.pid = info->si_pid;
 	}
 	if (signum == SIGUSR1)
@@ -79,7 +79,7 @@ void	sig_handler(int signum, siginfo_t *info)
 		data.i = 0;
 		if (data.c == '\0')
 		{
-			g_data.str = print_string(g_data.str, 1, &data);
+			g_data.str = print_string(g_data.str, 1, &data, context);
 			kill(g_data.pid, SIGUSR2);
 			return ;
 		}
@@ -88,13 +88,13 @@ void	sig_handler(int signum, siginfo_t *info)
 	kill(g_data.pid, SIGUSR1);
 }
 
-int main(void)
+int	main(void)
 {
 	struct sigaction	sa;
 
-    ft_printf("SERVER PID: %d\n", getpid());
+	ft_printf("SERVER PID: %d\n", getpid());
 	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = (void (*)(int, siginfo_t*, void*))sig_handler;
+	sa.sa_sigaction = sig_handler;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 	g_data.str = 0;
