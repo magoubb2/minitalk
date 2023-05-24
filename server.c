@@ -15,6 +15,7 @@
 
 t_data	g_data;
 
+
 int	ft_clear(t_clear *data)
 {
 	data->len = 0;
