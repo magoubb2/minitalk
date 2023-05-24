@@ -6,7 +6,7 @@
 /*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:35:34 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/20 19:38:41 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:58:56 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ void print_byte(char c) {
 
 t_data g_data;
 
+void	ft_quit(int i)
+{
+	exit(i);
+}
+
 void	send_bits(char byte, int pid)
 {
 	if ((byte) & 1)
@@ -42,6 +47,7 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	(void) context;
  	if (signum == SIGUSR1)
 	{
+		g_data.i = 0;
 		send_bits(g_data.str[0] >> i++, g_data.pid);
 		if (i == 8)
 		{
@@ -51,8 +57,8 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	}
 	else
 	{
-		write(1, "The end\n", 8);
-		exit(0);
+	 	write(1, "The end\n", 8);
+	 	exit(0);
 	}
 }
 
@@ -60,12 +66,10 @@ int main(int argc, char **argv)
 {
 	struct sigaction	sa;
     int					s_pid;
-	int					byte_idx;
 
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;
     s_pid = ft_atoi(argv[1]);
-	byte_idx = 0;
     if (argc != 3)
     {
 		ft_printf("WRONG NUMBER OF ARGUMENTS");
@@ -79,6 +83,7 @@ int main(int argc, char **argv)
 		ft_printf("%s" "error_2");
 	send_bits(argv[2][0], s_pid);
 	while (1)
-		pause();
+		if (g_data.i++ >= 1000000)
+			ft_quit(1);
     return (0);
 }
