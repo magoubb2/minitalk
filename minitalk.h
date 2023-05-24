@@ -6,7 +6,7 @@
 /*   By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 10:36:11 by mabaron-          #+#    #+#             */
-/*   Updated: 2023/05/23 17:24:51 by mabaron-         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:15:12 by mabaron-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_data
 {
 	char	*str;
 	pid_t	pid;
+	int		i;
 }	t_data;
 
 int		ft_atoi(const char *str);

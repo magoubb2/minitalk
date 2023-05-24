@@ -6,7 +6,7 @@
 #    By: mabaron- <mabaron-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/24 14:56:23 by mabaron-          #+#    #+#              #
-#    Updated: 2023/05/04 10:33:08 by mabaron-         ###   ########.fr        #
+#    Updated: 2023/05/23 19:50:00 by mabaron-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJ_S = $(SRC_S:.c=.o)
 OBJ_C = $(SRC_C:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
 LIBFT = libft.a
